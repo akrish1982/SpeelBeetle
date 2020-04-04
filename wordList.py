@@ -20,9 +20,15 @@ with open('PageCount-test.csv') as csv_file:
             
             webURL = "https://www.merriam-webster.com/browse/dictionary/" + alpha + "/" + str(page)
             
-            print(webURL)
+            #print(webURL)
+            while True:
+                try:
+                    page = urllib.request.urlopen(webURL)
+                    if page.getcode() == 200:
+                        break
+                except Exception as inst:
+                    print(inst)
             
-            page = urllib.request.urlopen(webURL)
             
             soup = BeautifulSoup(page, 'html.parser')
             
@@ -31,8 +37,10 @@ with open('PageCount-test.csv') as csv_file:
             for i in s1.find_all('a'):
                 words.append(i.find(text=True))
                 links.append(i.get('href'))
+            #end of for loop
+    #end of for loop
 df = pd.DataFrame(words,columns=['Words'])
 df['Links']=links
-df.to_csv('allWordList-u-z.csv')
+df.to_csv('allWordList.csv',encoding='utf-8')
   
 
